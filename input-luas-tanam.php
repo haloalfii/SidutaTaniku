@@ -18,11 +18,11 @@ if(isset($_POST['submit'])){
     $des = $_POST['des'];
     
  
-    $add_status = $proses->AddData($id_kecamatan, $id_komoditi, $jan, $feb, $mar, $apr, $mei, $jun, $jul, $agu, $sep, $okt, $nov, $des);
+    $add_status = $proses->AddDataLuasTanam($id_kecamatan, $id_komoditi, $jan, $feb, $mar, $apr, $mei, $jun, $jul, $agu, $sep, $okt, $nov, $des);
     if($add_status){
         echo "<script>
         alert('Data berhasil ditambahkan');
-        location='index.php';
+        location='lihat-data.php';
     </script>";
     }
 }
@@ -48,7 +48,7 @@ if(isset($_POST['submit'])){
                 <main>
                     <form action="" method="POST">
                     <div class="container">
-                    <h4>Input Data Siswa</h4>
+                    <h4>Input Data Luas Tanam</h4>
                         <table border="0">
                             <tr>
                                 <td>Kecamatan</td>
@@ -73,62 +73,62 @@ if(isset($_POST['submit'])){
                             <tr>
                                 <td>Januari</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="jan" type="number" name="jan"></td>
+                                <td><input class="form-control py-2" id="jan" type="number" name="jan" value="0"></td>
                             </tr>
                             <tr>
                                 <td>Februaru</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="feb" type="number" name="feb"></td>
+                                <td><input class="form-control py-2" id="feb" type="number" name="feb" value="0"></td>
                             </tr>
                             <tr>
                                 <td>Maret</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="mar" type="number" name="mar"></td>
+                                <td><input class="form-control py-2" id="mar" type="number" name="mar" value="0"></td>
                             </tr>
                             <tr>
                                 <td>April</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="apr" type="number" name="apr"></td>
+                                <td><input class="form-control py-2" id="apr" type="number" name="apr" value="0"></td>
                             </tr>
                             <tr>
                                 <td>Mei</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="mei" type="number" name="mei"></td>
+                                <td><input class="form-control py-2" id="mei" type="number" name="mei" value="0"></td>
                             </tr>
                             <tr>
                                 <td>Juni</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="jun" type="number" name="jun"></td>
+                                <td><input class="form-control py-2" id="jun" type="number" name="jun" value="0"></td>
                             </tr>
                             <tr>
                                 <td>Juli</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="jul" type="number" name="jul"></td>
+                                <td><input class="form-control py-2" id="jul" type="number" name="jul" value="0"></td>
                             </tr>
                             <tr>
                                 <td>Agustus</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="agu" type="number" name="agu"></td>
+                                <td><input class="form-control py-2" id="agu" type="number" name="agu" value="0"></td>
                             </tr>
                             <tr>
                                 <td>September</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="sep" type="number" name="sep"></td>
+                                <td><input class="form-control py-2" id="sep" type="number" name="sep" value="0"></td>
                             </tr>
                             <tr>
                                 <td>Oktober</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="okt" type="number" name="okt"></td>
+                                <td><input class="form-control py-2" id="okt" type="number" name="okt" value="0"></td>
                             </tr>
                             <tr>
                                 <td>November</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="nov" type="number" name="nov"></td>
+                                <td><input class="form-control py-2" id="nov" type="number" name="nov" value="0"></td>
                             </tr>
                             <tr>
                                 <td>Desember</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="des" type="number" name="des"></td>
+                                <td><input class="form-control py-2" id="des" type="number" name="des" value="0"></td>
                             </tr>
                         </table>
                         <div class="form-group mt-2 mb-0"><input type="submit" value="Input Data" name="submit" class="btn btn-primary"></div>
