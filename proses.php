@@ -49,13 +49,27 @@
             return $result;
         }
 
-        // public function AddData($id_produksi, $jan, $feb, $mar, $apr, $mei, $jun, $jul, $agu, $sep, $okt, $nov, $des){
-        //     $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        //     $query="INSERT INTO data_produksi(jan, feb, mar, apr, mei, jun, jul, agu, sep, okt, nov, des) 
-        //     VALUES ('" . $jan . "','" . $feb . "','" . $mar . "', '" . $apr . "','" . $mei . "','" . $jun . "','" . $jul . "', '" . $agu . "', '" . $sep . "', '" . $okt . "', '" . $nov . "', '". $des ."')WHERE id_produksi = ".$id_produksi."";
-        //     $stmt = $this->pdo->prepare($query);
-        //     $stmt->execute();
-        //     return $stmt->rowCount();
-        // }
+        public function AddData($id_kecamatan, $id_komoditi, $jan, $feb, $mar, $apr, $mei, $jun, $jul, $agu, $sep, $okt, $nov, $des)
+        {
+            $data = $this->pdo->prepare('INSERT INTO produksi (jan,feb,mar,apr,mei,jun,jul,agu,sep,okt,nov,des,id_kecamatan,id_komoditi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            
+            $data->bindParam(1, $jan);
+            $data->bindParam(2, $feb);
+            $data->bindParam(3, $mar);
+            $data->bindParam(4, $apr);
+            $data->bindParam(5, $mei);
+            $data->bindParam(6, $jun);
+            $data->bindParam(7, $jul);
+            $data->bindParam(8, $agu);
+            $data->bindParam(9, $sep);
+            $data->bindParam(10, $okt);
+            $data->bindParam(11, $nov);
+            $data->bindParam(12, $des);
+            $data->bindParam(13, $id_kecamatan);
+            $data->bindParam(14, $id_komoditi);
+     
+            $data->execute();
+            return $data->rowCount();
+        }
     }
 ?>

@@ -1,12 +1,31 @@
 <?php
-    // include_once 'proses.php';
-    // $pertanian = new Pertanian;
-    // if(isset($_POST['submit'])){
-    //     $insert = $pertanian->AddData($_POST['id_produksi'], $_POST['jan'], $_POST['feb'], $_POST['mar'], $_POST['apr'], $_POST['mei'], $_POST['jun'],  $_POST['jul'],  $_POST['agu'],  $_POST['sep'],  $_POST['okt'],  $_POST['nov'],  $_POST['des']);
-    //     if ($insert){
-    //         echo "<script>alert('Data Berhasil Ditambahkan');window.location = 'lihat-data.php';</script>";
-    //     }
-    // }
+include('proses.php');
+$proses = new Pertanian();
+if(isset($_POST['submit'])){
+    $id_kecamatan = $_POST['id_kecamatan'];
+    $id_komoditi = $_POST['id_komoditi'];
+    $jan = $_POST['jan'];
+    $feb = $_POST['feb'];
+    $mar = $_POST['mar'];
+    $apr = $_POST['apr'];
+    $mei = $_POST['mei'];
+    $jun = $_POST['jun'];
+    $jul = $_POST['jul'];
+    $agu = $_POST['agu'];
+    $sep = $_POST['sep'];
+    $okt = $_POST['okt'];
+    $nov = $_POST['nov'];
+    $des = $_POST['des'];
+    
+ 
+    $add_status = $proses->AddData($id_kecamatan, $id_komoditi, $jan, $feb, $mar, $apr, $mei, $jun, $jul, $agu, $sep, $okt, $nov, $des);
+    if($add_status){
+        echo "<script>
+        alert('Data berhasil ditambahkan');
+        location='index.php';
+    </script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -27,19 +46,28 @@
              ?>
             <div id="layoutSidenav_content">
                 <main>
-                    <form action="input-data.php" method="POST">
+                    <form action="" method="POST">
                     <div class="container">
                     <h4>Input Data Siswa</h4>
                         <table border="0">
                             <tr>
-                                <td>kabupaten</td>
+                                <td>Kecamatan</td>
                                 <td> : </td>
                                 <td>
-                                <select id="id_produksi" name="id_produksi" class="form-control py-2">
-                                    <option value=1>Sleman</option>
-                                    <option value=2>Bantul</option>
-                                    <option value=3>Gunung Kidul</option>
-                                </select>
+                                    <select id="id_kecamatan" name="id_kecamatan" class="form-control py-2">
+                                        <option value=010>Temon</option>
+                                        <option value=020>Wates</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Komoditi</td>
+                                <td> : </td>
+                                <td>
+                                    <select id="id_komoditi" name="id_komoditi" class="form-control py-2">
+                                        <option value=001>Jagung</option>
+                                        <option value=002>Padi</option>
+                                    </select>
                                 </td>
                             </tr>
                             <tr>

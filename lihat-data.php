@@ -76,6 +76,8 @@
                                         echo "Sudah pilih keduanya";
                                     }
                                     else if ($_POST['jenis']){
+                                        $jenis = $_POST['jenis'];
+                                        $row = $pertanian->GetAllLuasTanam($jenis);
                                         echo "Hanya Jenis";
                                     }
                                 }
