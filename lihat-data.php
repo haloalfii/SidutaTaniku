@@ -33,6 +33,11 @@
             </script>";
         }
     }
+
+    include_once 'dbconfig.php';
+    if (!$user->is_loggedin()) {
+        $user->redirect('index.php');
+    }
 ?>
 
 <!DOCTYPE html>

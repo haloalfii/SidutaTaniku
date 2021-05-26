@@ -37,6 +37,10 @@ if(isset($_POST['update']))
     }
 }
 
+include_once 'dbconfig.php';
+if (!$user->is_loggedin()) {
+    $user->redirect('index.php');
+}
 
 ?>
 
@@ -60,29 +64,17 @@ if(isset($_POST['update']))
                 <main>
                     <form action="" method="POST">
                     <div class="container">
-                    <h4>Input Data Produksi</h4>
+                    <h4>Edit Data Produksi <i class="text-danger"><?php echo $data['jenis'] ?></i> Di Kecamatan <i class="text-danger"><?= $data['nama_kecamatan'] ?></i></h4>
                         <table border="0">
                         <input type="hidden" name="id_produksi" value="<?= $data['id_produksi'] ?>">
                             <tr>
-                                <td>Kecamatan</td>
-                                <td> : </td>
                                 <td>
-                                    <select id="id_kecamatan" name="id_kecamatan" class="form-control py-2">
-                                        <option value="<?= $data['id_kecamatan'] ?>"><?= $data['nama_kecamatan'] ?></option>
-                                        <option value=010>Temon</option>
-                                        <option value=020>Wates</option>
-                                    </select>
+                                    <input class="form-control py-2" id="id_kecamatan" type="hidden" name="id_kecamatan" value="<?= $data['id_kecamatan'] ?>">
                                 </td>
                             </tr>
                             <tr>
-                                <td>Komoditi</td>
-                                <td> : </td>
                                 <td>
-                                    <select id="id_komoditi" name="id_komoditi" class="form-control py-2">
-                                        <option value="<?= $data['id_komoditi'] ?>"><?= $data['jenis'] ?></option>
-                                        <option value=001>Jagung</option>
-                                        <option value=002>Padi</option>
-                                    </select>
+                                    <input class="form-control py-2" id="id_komoditi" type="hidden" name="id_komoditi" value="<?= $data['id_komoditi'] ?>">
                                 </td>
                             </tr>
                             <tr>

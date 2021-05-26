@@ -1,121 +1,67 @@
 <?php
-    include_once 'koneksi.php';
+require_once 'koneksi.php';
+require_once 'Dbconfig.php';
+require_once 'classUser.php';
 
-    $result = mysqli_query($con, "SELECT * FROM data_produksi WHERE id_produksi = 1");
-    $row = mysqli_fetch_row($result);
+if ($user->is_loggedin() != "") {
+    $user->redirect('home.php');
+}
 
+if (isset($_POST['btn-login'])) {
+    $uname = $_POST['txt_uname_email'];
+    $umail = $_POST['txt_uname_email'];
+    $upass = $_POST['txt_password'];
+
+    if ($user->login($uname, $umail, $upass)) {
+        $user->redirect('home.php');
+    } else {
+        $error = "Wrong Details !";
+    }
+}
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <?php
-            include_once 'header.php';
-        ?>
-        </br>
-    </head>
-    <body class="sb-nav-fixed">
-       <?php
-        include_once 'navbar.php';
-       ?>
-        <div id="layoutSidenav">
-            <?php
-                include_once 'sidebar.php';
-            ?> 
-            <div id="layoutSidenav_content">
-                <div class="container">
-                    <main>
-                    <?php
-                        ;
-                    ?>
-                        <div class="container-graph">
-                            
-                            
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-bar mr-1"></i>
-                                        Data Pertanian
-                                        
-                                    </div>
-                                    <div class="card-body"><canvas id="myChart"></canvas></canvas></div>
-                                </div>
-                            </div>
-                        </div>
+<head>
+    <?php
+        include_once 'header.php';
+    ?>
+</head>
 
-                        <script>
-                            var ctx = document.getElementById("myChart");
-                            var myChart = new Chart(ctx, {
-                                type: 'bar',
-                                data: {
-                                    labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-
-                                    datasets: [{
-                                        label: 'Data Pertanian Sleman',
-
-                                        data: [
-                                            <?php echo "$row[1]"?>, <?php echo "$row[2]"?>, <?php echo "$row[3]"?>, 
-                                            <?php echo "$row[4]"?>, <?php echo "$row[5]"?>, <?php echo "$row[6]"?>, 
-                                            <?php echo "$row[7]"?>, <?php echo "$row[8]"?>, <?php echo "$row[9]"?>, 
-                                            <?php echo "$row[10]"?>, <?php echo "$row[11]"?>, <?php echo "$row[12]"?>, 
-                                        ],
-
-                                        backgroundColor: [
-                                            'rgba(255, 99, 132, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(255, 165, 0, 1)',
-                                            'rgba(106, 90, 205, 1)',
-                                            'rgba(238, 130, 238, 1)',
-                                            'rgba(255, 0, 0, 1)',
-                                            'rgba(0, 0, 255, 1)',
-                                            'rgba(0, 255, 0, 1)',
-                                            'rgba(60, 179, 113, 1)',
-                                            'rgba(60, 60, 60, 1)',
-                                            'rgba(180, 180, 180, 1)',
-                                            'rgba(120, 120, 120, 1)',
-                                        ],
-
-                                        borderColor: [
-                                            'rgba(255, 99, 132, 1)',
-                                            'rgba(54, 162, 235, 1)',
-                                            'rgba(255, 165, 0, 1)',
-                                            'rgba(106, 90, 205, 1)',
-                                            'rgba(238, 130, 238, 1)',
-                                            'rgba(255, 0, 0, 1)',
-                                            'rgba(0, 0, 255, 1)',
-                                            'rgba(0, 255, 0, 1)',
-                                            'rgba(60, 179, 113, 1)',
-                                            'rgba(60, 60, 60, 1)',
-                                            'rgba(180, 180, 180, 1)',
-                                            'rgba(120, 120, 120, 1)',
-                                        ],
-                                        borderWidth: 1
-                                    }]
-                                },
-
-                                options: {
-                                    scales: {
-                                        yAxes: [{
-                                            ticks: {
-                                                beginAtZero: true
-                                            }
-                                        }]
-                                    }
-                                }
-                            });
-                        </script>
-
-                    </main>
-                </div>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <form method="post">
+                <h2 class="text-center">Sign in. Sidutaniku</h2>
+                <hr />
                 <?php
-                    include_once 'footer.php';
-                ?>  
-            </div>
+                if (isset($error)) {
+                ?>
+                    <div class="alert alert-danger">
+                        <i class="glyphicon glyphicon-warning-sign"></i> &nbsp; <?php echo $error; ?> !
+                    </div>
+                <?php
+                }
+                ?>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="txt_uname_email" placeholder="Username or E mail ID" required />
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" name="txt_password" placeholder="Your Password" required />
+                </div>
+                <div class="clearfix"></div>
+                <hr />
+                <div class="form-group">
+                    <button type="submit" name="btn-login" class="btn btn-block btn-primary">
+                        <i class="glyphicon glyphicon-log-in"></i>&nbsp;SIGN IN
+                    </button>
+                </div>
+                <br />
+                <label>Don't have account yet ! <a href="sign-up.php">Sign Up</a></label>
+            </form>
         </div>
-        <?php
-            include_once 'script-js.php';
-        ?>
-    </body>
+    </div>
+
+</body>
+
 </html>

@@ -5,6 +5,8 @@
 <meta name="author" content="" />
 <title>Data Pertanian</title>
 <link href="dist/css/styles.css" rel="stylesheet" />
+<link rel="stylesheet" href="dist/css/style.css" type="text/css" />
+<title>welcome - <?php print($userRow['user_email']); ?></title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
