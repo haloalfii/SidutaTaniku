@@ -3,7 +3,14 @@ include_once 'dbconfig.php';
 if (!$user->is_loggedin()) {
     $user->redirect('index.php');
 }
-$user_id = $_SESSION['user_session'];
+
+if(!$_SESSION['admin_session']){
+    $user_id = $_SESSION['user_session'];
+}
+else {
+    $user_id = $_SESSION['admin_session'];
+}
+
 $stmt = $DB_con->prepare("SELECT * FROM users WHERE user_id=:user_id");
 $stmt->execute(array(":user_id" => $user_id));
 $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -11,8 +18,8 @@ $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
 <?php
 include_once 'koneksi.php';
 
-$result = mysqli_query($con, "SELECT * FROM data_produksi WHERE id_produksi = 1");
-$row = mysqli_fetch_row($result);
+// $result = mysqli_query($con, "SELECT * FROM data_produksi WHERE id_produksi = 1");
+// $row = mysqli_fetch_row($result);
 
 ?>
 
@@ -65,10 +72,7 @@ $row = mysqli_fetch_row($result);
                                     label: 'Data Pertanian Sleman',
 
                                     data: [
-                                        <?php echo "$row[1]" ?>, <?php echo "$row[2]" ?>, <?php echo "$row[3]" ?>,
-                                        <?php echo "$row[4]" ?>, <?php echo "$row[5]" ?>, <?php echo "$row[6]" ?>,
-                                        <?php echo "$row[7]" ?>, <?php echo "$row[8]" ?>, <?php echo "$row[9]" ?>,
-                                        <?php echo "$row[10]" ?>, <?php echo "$row[11]" ?>, <?php echo "$row[12]" ?>,
+                                        
                                     ],
 
                                     backgroundColor: [

@@ -32,7 +32,7 @@ if (isset($_POST['btn-login'])) {
     <div class="container">
         <div class="form-container">
             <form method="post">
-                <h2 class="text-center">Sign in. Sidutaniku</h2>
+                <h2 class="text-center">Sign in SidutaTaniku</h2>
                 <hr />
                 <?php
                 if (isset($error)) {
@@ -44,7 +44,7 @@ if (isset($_POST['btn-login'])) {
                 }
                 ?>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="txt_uname_email" placeholder="Username or E mail ID" required />
+                    <input type="text" class="form-control" name="txt_uname_email" placeholder="Username or Email" required />
                 </div>
                 <div class="form-group">
                     <input type="password" class="form-control" name="txt_password" placeholder="Your Password" required />
@@ -57,7 +57,7 @@ if (isset($_POST['btn-login'])) {
                     </button>
                 </div>
                 <br />
-                <label>Don't have account yet ! <a href="sign-up.php">Sign Up</a></label>
+                <label>Don't have account yet! <a href="sign-up.php">Sign Up</a></label>
             </form>
         </div>
     </div>

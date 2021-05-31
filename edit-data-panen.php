@@ -39,6 +39,11 @@ if (!$user->is_loggedin()) {
     $user->redirect('index.php');
 }
 
+if(!$_SESSION['admin_session'])
+{
+    $user->redirect('lihat-data.php');
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -68,73 +73,73 @@ if (!$user->is_loggedin()) {
                             <input type="hidden" name="id_panen" value="<?= $data['id_panen'] ?>">
                             <tr>
                                 <td>
-                                    <input class="form-control py-2" id="id_kecamatan" type="hidden" name="id_kecamatan" value="<?= $data['id_kecamatan'] ?>">
+                                    <input class="form-control py-2" id="id_kecamatan" step="any" type="hidden" name="id_kecamatan" value="<?= $data['id_kecamatan'] ?>">
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input class="form-control py-2" id="id_komoditi" type="hidden" name="id_komoditi" value="<?= $data['id_komoditi'] ?>">
+                                    <input class="form-control py-2" id="id_komoditi" step="any" type="hidden" name="id_komoditi" value="<?= $data['id_komoditi'] ?>">
                                 </td>
                             </tr>
                             <tr>
                                 <td>Januari</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="jan" type="number" name="jan" value="<?= $data['jan'] ?>" required></td>
+                                <td><input class="form-control py-2" id="jan" step="any" type="number" name="jan" value="<?= $data['jan'] ?>" required></td>
                             </tr>
                             <tr>
                                 <td>Februari</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="feb" type="number" name="feb" value="<?= $data['feb'] ?>" required></td>
+                                <td><input class="form-control py-2" id="feb" step="any" type="number" name="feb" value="<?= $data['feb'] ?>" required></td>
                             </tr>
                             <tr>
                                 <td>Maret</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="mar" type="number" name="mar" value="<?= $data['mar'] ?>" required></td>
+                                <td><input class="form-control py-2" id="mar" step="any" type="number" name="mar" value="<?= $data['mar'] ?>" required></td>
                             </tr>
                             <tr>
                                 <td>April</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="apr" type="number" name="apr" value="<?= $data['apr'] ?>" required></td>
+                                <td><input class="form-control py-2" id="apr" step="any" type="number" name="apr" value="<?= $data['apr'] ?>" required></td>
                             </tr>
                             <tr>
                                 <td>Mei</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="mei" type="number" name="mei" value="<?= $data['mei'] ?>" required></td>
+                                <td><input class="form-control py-2" id="mei" step="any" type="number" name="mei" value="<?= $data['mei'] ?>" required></td>
                             </tr>
                             <tr>
                                 <td>Juni</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="jun" type="number" name="jun" value="<?= $data['jun'] ?>" required></td>
+                                <td><input class="form-control py-2" id="jun" step="any" type="number" name="jun" value="<?= $data['jun'] ?>" required></td>
                             </tr>
                             <tr>
                                 <td>Juli</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="jul" type="number" name="jul" value="<?= $data['jul'] ?>" required></td>
+                                <td><input class="form-control py-2" id="jul" step="any" type="number" name="jul" value="<?= $data['jul'] ?>" required></td>
                             </tr>
                             <tr>
                                 <td>Agustus</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="agu" type="number" name="agu" value="<?= $data['agu'] ?>" required></td>
+                                <td><input class="form-control py-2" id="agu" step="any" type="number" name="agu" value="<?= $data['agu'] ?>" required></td>
                             </tr>
                             <tr>
                                 <td>September</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="sep" type="number" name="sep" value="<?= $data['sep'] ?>" required></td>
+                                <td><input class="form-control py-2" id="sep" step="any" type="number" name="sep" value="<?= $data['sep'] ?>" required></td>
                             </tr>
                             <tr>
                                 <td>Oktober</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="okt" type="number" name="okt" value="<?= $data['okt'] ?>" required></td>
+                                <td><input class="form-control py-2" id="okt" step="any" type="number" name="okt" value="<?= $data['okt'] ?>" required></td>
                             </tr>
                             <tr>
                                 <td>November</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="nov" type="number" name="nov" value="<?= $data['nov'] ?>" required></td>
+                                <td><input class="form-control py-2" id="nov" step="any" type="number" name="nov" value="<?= $data['nov'] ?>" required></td>
                             </tr>
                             <tr>
                                 <td>Desember</td>
                                 <td> : </td>
-                                <td><input class="form-control py-2" id="des" type="number" name="des" value="<?= $data['des'] ?>" required></td>
+                                <td><input class="form-control py-2" id="des" step="any" type="number" name="des" value="<?= $data['des'] ?>" required></td>
                             </tr>
                         </table>
                         <div class="form-group mt-2 mb-0"><input type="submit" value="Update Data" name="update" class="btn btn-primary"></div>

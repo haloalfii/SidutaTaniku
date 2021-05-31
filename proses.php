@@ -34,7 +34,7 @@
         public function GetAllLuasTanam($jenis){
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $query = "SELECT * FROM luas_tanam INNER JOIN kecamatan ON luas_tanam.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_tanam.id_komoditi
-            WHERE komoditi.jenis = '".$jenis."'";
+            WHERE komoditi.jenis = '".$jenis."' ORDER BY kecamatan.id_kecamatan";
             $stmt = $this->pdo->prepare($query);
             $stmt->execute();
             $result = $stmt->fetchAll();
@@ -45,7 +45,7 @@
         public function GetAllLuasTanamKecamatan($jenis, $kecamatan){
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $query = "SELECT * FROM luas_tanam INNER JOIN kecamatan ON luas_tanam.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_tanam.id_komoditi
-            WHERE komoditi.jenis = '".$jenis."' AND kecamatan.nama_kecamatan = '".$kecamatan."'";
+            WHERE komoditi.jenis = '".$jenis."' AND kecamatan.nama_kecamatan = '".$kecamatan."' ORDER BY kecamatan.id_kecamatan";
             $stmt = $this->pdo->prepare($query);
             $stmt->execute();
             $result = $stmt->fetchAll();

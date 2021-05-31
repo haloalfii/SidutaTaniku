@@ -1,4 +1,5 @@
 <?php
+include_once "koneksi.php";
 include_once "proses.php";
 $pertanian = new Pertanian;
 if (isset($_GET['hapus_tanam'])) {
@@ -47,6 +48,16 @@ if (!$user->is_loggedin()) {
     <?php
     include_once 'header.php';
     ?>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="dist/js/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="dist/assets/demo/chart-area-demo.js"></script>
+    <script src="dist/assets/demo/chart-bar-demo.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+    <script src="dist/assets/demo/datatables-demo.js"></script>
+
 </head>
 
 <body class="sb-nav-fixed">
@@ -69,6 +80,11 @@ if (!$user->is_loggedin()) {
                                     <option value="">Pilih</option>
                                     <option value="Jagung">Jagung</option>
                                     <option value="Padi">Padi</option>
+                                    <option value="Kedelai">Kedelai</option>
+                                    <option value="Ubi Kayu">Ubi Kayu</option>
+                                    <option value="Ubi Jalar">Ubi Jalar</option>
+                                    <option value="Kacang Tanah">Kacang Tanah</option>
+                                    <option value="Kacang Hijau">Kacang Hijau</option>
                                 </select>
                         </div>
                         <div class="col-md-2">
@@ -77,6 +93,16 @@ if (!$user->is_loggedin()) {
                                 <option value="">Pilih</option>
                                 <option value="Temon">Temon</option>
                                 <option value="Wates">Wates</option>
+                                <option value="Panjatan">Panjatan</option>
+                                <option value="Galur">Galur</option>
+                                <option value="Lendah">Lendah</option>
+                                <option value="Sentolo">Sentolo</option>
+                                <option value="Pengasih">Pengasih</option>
+                                <option value="Kokap">Kokap</option>
+                                <option value="Girimulyo">Girimulyo</option>
+                                <option value="Nanggulan">Nanggulan</option>
+                                <option value="Kalibawang">Kalibawang</option>
+                                <option value="Samigaluh">Samigaluh</option>
                             </select>
                         </div>
                         <div class="col-md-2">
@@ -95,13 +121,11 @@ if (!$user->is_loggedin()) {
                             $row = $pertanian->GetAllLuasTanamKecamatan($jenis, $kecamatan);
                             $row1 = $pertanian->GetAllLuasPanenKecamatan($jenis, $kecamatan);
                             $row2 = $pertanian->GetAllProduksiKecamatan($jenis, $kecamatan);
-                            echo "Sudah pilih keduanya";
                         } else if ($_POST['jenis']) {
                             $jenis = $_POST['jenis'];
                             $row = $pertanian->GetAllLuasTanam($jenis);
                             $row1 = $pertanian->GetAllLuasPanen($jenis);
                             $row2 = $pertanian->GetAllProduksi($jenis);
-                            echo "Hanya Jenis";
                         }
                     } else {
                         $jenis = '';
@@ -109,7 +133,6 @@ if (!$user->is_loggedin()) {
                         $row = $pertanian->GetAll();
                         $row1 = $pertanian->GetAll();
                         $row2 = $pertanian->GetAll();
-                        echo "Pilihan Kosong";
                         echo '<script>
                             document.getElementById("none").className = "d-none";
                             <script>';
@@ -117,7 +140,9 @@ if (!$user->is_loggedin()) {
                     ?>
 
                     <div id="none" class="">
+                        <br>
                         <a target="_blank" href="excel.php" class="btn btn-info">EXPORT KE EXCEL</a>
+                        <br>
                         <h3>Luas Tanam Menurut Kecamatan (Hektar)</h3>
                         <table class="table table-bordered" width="100%" cellspacing="0">
                             <thead>
@@ -138,8 +163,13 @@ if (!$user->is_loggedin()) {
                                     <th>Jan-Apr</th>
                                     <th>Mei-Ags</th>
                                     <th>Sep-Des</th>
-                                    <th>Komoditi</th>
-                                    <th>Action</th>
+                                    <th>Jumlah</th>
+                                    <th>Komoditas</th>
+                                    <?php if (isset($_SESSION['user_session'])) : ?>
+                                        <th class="d-none">Action</th>
+                                    <?php else : ?>
+                                        <th>Action</th>
+                                    <?php endif ?>
                                 </tr>
                             </thead>
 
@@ -173,15 +203,79 @@ if (!$user->is_loggedin()) {
                                             $sepdes = $row["sep"] + $row["okt"] + $row["nov"] + $row["des"];
                                             echo $sepdes;
                                             ?></td>
+                                        <td><?php
+                                            $all = $row["jan"] + $row["feb"] + $row["mar"] + $row["apr"] + $row["mei"] + $row["jun"] + $row["jul"] + $row["agu"] + $row["sep"] + $row["okt"] + $row["nov"] + $row["des"];
+                                            echo $all;
+                                            ?></td>
                                         <td><?php echo $row["jenis"] ?></td>
                                         <td>
-                                            <a href="edit-data-tanam.php?id_tanam=<?= $row['id_tanam'] ?>" class="btn btn-primary">Edit</a>
-                                            <a href="lihat-data.php?hapus_tanam=<?= $row['id_tanam'] ?>" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ?')">Hapus</a>
+                                            <?php if (isset($_SESSION['user_session'])) : ?>
+                                                <a href="edit-data-tanam.php?id_tanam=<?= $row['id_tanam'] ?>" class="btn btn-primary d-none">Edit</a>
+                                            <?php else : ?>
+                                                <a href="edit-data-tanam.php?id_tanam=<?= $row['id_tanam'] ?>" class="btn btn-primary">Edit</a>
+                                            <?php endif ?>
+
+                                            <?php if (isset($_SESSION['user_session'])) : ?>
+                                                <a href="lihat-data.php?hapus_tanam=<?= $row['id_tanam'] ?>" class="btn btn-danger d-none" onclick="return confirm('Apakah anda yakin ?')">Hapus</a>
+                                            <?php else : ?>
+                                                <a href="lihat-data.php?hapus_tanam=<?= $row['id_tanam'] ?>" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ?')">Hapus</a>
+                                            <?php endif ?>
                                         </td>
                                     </tr>
                                 <?php
                                 }
                                 ?>
+                                <tr>
+                                    <td>Total</td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(feb) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mar) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(apr) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mei) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jun) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jul) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(agu) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(sep) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(okt) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(nov) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(des) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mei), sum(jun), sum(jul), sum(agu) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(sep), sum(okt), sum(nov), sum(des) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_tanam");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3] + $rowjml[4] + $rowjml[5] + $rowjml[6] + $rowjml[7] + $rowjml[8] + $rowjml[9] + $rowjml[10] + $rowjml[11]);?></td>
+                                </tr>
                             </tbody>
                         </table>
 
@@ -205,8 +299,13 @@ if (!$user->is_loggedin()) {
                                     <th>Jan-Apr</th>
                                     <th>Mei-Ags</th>
                                     <th>Sep-Des</th>
-                                    <th>Komoditi</th>
-                                    <th>Action</th>
+                                    <th>Jumlah</th>
+                                    <th>Komoditas</th>
+                                    <?php if (isset($_SESSION['user_session'])) : ?>
+                                        <th class="d-none">Action</th>
+                                    <?php else : ?>
+                                        <th>Action</th>
+                                    <?php endif ?>
                                 </tr>
                             </thead>
 
@@ -240,15 +339,79 @@ if (!$user->is_loggedin()) {
                                             $sepdes = $row1["sep"] + $row1["okt"] + $row1["nov"] + $row1["des"];
                                             echo $sepdes;
                                             ?></td>
+                                        <td><?php
+                                            $all = $row1["jan"] + $row1["feb"] + $row1["mar"] + $row1["apr"] + $row1["mei"] + $row1["jun"] + $row1["jul"] + $row1["agu"] + $row1["sep"] + $row1["okt"] + $row1["nov"] + $row1["des"];
+                                            echo $all;
+                                            ?></td>
                                         <td><?php echo $row1["jenis"] ?></td>
                                         <td>
-                                            <a href="edit-data-panen.php?id_panen=<?= $row1['id_panen'] ?>" class="btn btn-primary">Edit</a>
-                                            <a href="lihat-data.php?hapus_panen=<?= $row1['id_panen'] ?>" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ?')">Hapus</a>
+                                            <?php if (isset($_SESSION['user_session'])) : ?>
+                                                <a href="edit-data-panen.php?id_panen=<?= $row1['id_panen'] ?>" class="btn btn-primary d-none">Edit</a>
+                                            <?php else : ?>
+                                                <a href="edit-data-panen.php?id_panen=<?= $row1['id_panen'] ?>" class="btn btn-primary">Edit</a>
+                                            <?php endif ?>
+
+                                            <?php if (isset($_SESSION['user_session'])) : ?>
+                                                <a href="lihat-data.php?hapus_panen=<?= $row1['id_panen'] ?>" class="btn btn-danger d-none" onclick="return confirm('Apakah anda yakin ?')">Hapus</a>
+                                            <?php else : ?>
+                                                <a href="lihat-data.php?hapus_panen=<?= $row1['id_panen'] ?>" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ?')">Hapus</a>
+                                            <?php endif ?>
                                         </td>
                                     </tr>
                                 <?php
                                 }
                                 ?>
+                                <tr>
+                                    <td>Total</td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(feb) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mar) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(apr) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mei) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jun) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jul) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(agu) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(sep) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(okt) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(nov) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(des) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mei), sum(jun), sum(jul), sum(agu) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(sep), sum(okt), sum(nov), sum(des) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_panen");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3] + $rowjml[4] + $rowjml[5] + $rowjml[6] + $rowjml[7] + $rowjml[8] + $rowjml[9] + $rowjml[10] + $rowjml[11]);?></td>
+                                </tr>
                             </tbody>
                         </table>
 
@@ -272,8 +435,13 @@ if (!$user->is_loggedin()) {
                                     <th>Jan-Apr</th>
                                     <th>Mei-Ags</th>
                                     <th>Sep-Des</th>
-                                    <th>Komoditi</th>
-                                    <th>Action</th>
+                                    <th>Jumlah</th>
+                                    <th>Komoditas</th>
+                                    <?php if (isset($_SESSION['user_session'])) : ?>
+                                        <th class="d-none">Action</th>
+                                    <?php else : ?>
+                                        <th>Action</th>
+                                    <?php endif ?>
                                 </tr>
                             </thead>
 
@@ -307,15 +475,79 @@ if (!$user->is_loggedin()) {
                                             $sepdes = $row2["sep"] + $row2["okt"] + $row2["nov"] + $row2["des"];
                                             echo $sepdes;
                                             ?></td>
+                                        <td><?php
+                                            $all = $row2["jan"] + $row2["feb"] + $row2["mar"] + $row2["apr"] + $row2["mei"] + $row2["jun"] + $row2["jul"] + $row2["agu"] + $row2["sep"] + $row2["okt"] + $row2["nov"] + $row2["des"];
+                                            echo $all;
+                                            ?></td>
                                         <td><?php echo $row2["jenis"] ?></td>
                                         <td>
-                                            <a href="edit-data-produksi.php?id_produksi=<?= $row2['id_produksi'] ?>" class="btn btn-primary">Edit</a>
-                                            <a href="lihat-data.php?hapus_produksi=<?= $row2['id_produksi'] ?>" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ?')">Hapus</a>
+                                            <?php if (isset($_SESSION['user_session'])) : ?>
+                                                <a href="edit-data-produksi.php?id_produksi=<?= $row2['id_produksi'] ?>" class="btn btn-primary d-none">Edit</a>
+                                            <?php else : ?>
+                                                <a href="edit-data-produksi.php?id_produksi=<?= $row2['id_produksi'] ?>" class="btn btn-primary">Edit</a>
+                                            <?php endif ?>
+
+                                            <?php if (isset($_SESSION['user_session'])) : ?>
+                                                <a href="lihat-data.php?hapus_produksi=<?= $row2['id_produksi'] ?>" class="btn btn-danger d-none" onclick="return confirm('Apakah anda yakin ?')">Hapus</a>
+                                            <?php else : ?>
+                                                <a href="lihat-data.php?hapus_produksi=<?= $row2['id_produksi'] ?>" class="btn btn-danger" onclick="return confirm('Apakah anda yakin ?')">Hapus</a>
+                                            <?php endif ?>
                                         </td>
                                     </tr>
                                 <?php
                                 }
                                 ?>
+                                <tr>
+                                    <td>Total</td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(feb) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mar) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(apr) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mei) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jun) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jul) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(agu) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(sep) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(okt) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(nov) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(des) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mei), sum(jun), sum(jul), sum(agu) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(sep), sum(okt), sum(nov), sum(des) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
+                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM produksi");
+                                    $rowjml = mysqli_fetch_row($jml);
+                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3] + $rowjml[4] + $rowjml[5] + $rowjml[6] + $rowjml[7] + $rowjml[8] + $rowjml[9] + $rowjml[10] + $rowjml[11]);?></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -331,5 +563,6 @@ if (!$user->is_loggedin()) {
     include_once 'script-js.php';
     ?>
 </body>
+
 
 </html>

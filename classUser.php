@@ -12,18 +12,19 @@ class USER
         $this->pdo = new PDO("mysql:host={$host};dbname={$database}", $user, $password);
     }
  
-    public function register($fname,$lname,$uname,$umail,$upass)
+    public function register($fname,$lname,$uname,$umail,$upass,$role)
     {
        try
        {
            $new_password = password_hash($upass, PASSWORD_DEFAULT);
    
-           $stmt = $this->pdo->prepare("INSERT INTO users(user_name,user_email,user_pass) 
-                                                       VALUES(:uname, :umail, :upass)");
+           $stmt = $this->pdo->prepare("INSERT INTO users(user_name,user_email,user_pass,role) 
+                                                       VALUES(:uname, :umail, :upass, :urole)");
               
            $stmt->bindparam(":uname", $uname);
            $stmt->bindparam(":umail", $umail);
-           $stmt->bindparam(":upass", $new_password);            
+           $stmt->bindparam(":upass", $new_password);  
+           $stmt->bindParam(":urole", $role);          
            $stmt->execute(); 
    
            return $stmt; 
@@ -45,8 +46,16 @@ class USER
           {
              if(password_verify($upass, $userRow['user_pass']))
              {
-                $_SESSION['user_session'] = $userRow['user_id'];
-                return true;
+                if($userRow['role'] == "1") {
+                  $_SESSION['admin_session'] = $userRow['user_id'];
+                  $_SESSION['level'] = "1";
+                  return true;
+                }
+                else {
+                  $_SESSION['user_session'] = $userRow['user_id'];
+                  $_SESSION['level'] = "0";
+                  return true;
+                }
              }
              else
              {
@@ -63,6 +72,10 @@ class USER
    public function is_loggedin()
    {
       if(isset($_SESSION['user_session']))
+      {
+         return true;
+      }
+      if(isset($_SESSION['admin_session']))
       {
          return true;
       }

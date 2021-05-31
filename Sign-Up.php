@@ -9,6 +9,7 @@ if (isset($_POST['btn-signup'])) {
     $uname = trim($_POST['txt_uname']);
     $umail = trim($_POST['txt_umail']);
     $upass = trim($_POST['txt_upass']);
+    $urole = trim($_POST['role']);
 
     if ($uname == "") {
         $error[] = "provide username !";
@@ -22,8 +23,8 @@ if (isset($_POST['btn-signup'])) {
         $error[] = "Password must be atleast 6 characters";
     } else {
         try {
-            $stmt = $DB_con->prepare("SELECT user_name,user_email FROM users WHERE user_name=:uname OR user_email=:umail");
-            $stmt->execute(array(':uname' => $uname, ':umail' => $umail));
+            $stmt = $DB_con->prepare("SELECT user_name,user_email FROM users WHERE user_name=:uname OR user_email=:umail OR role=:urole");
+            $stmt->execute(array(':uname' => $uname, ':umail' => $umail, ':urole' => $urole));
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($row['user_name'] == $uname) {
@@ -31,7 +32,7 @@ if (isset($_POST['btn-signup'])) {
             } else if ($row['user_email'] == $umail) {
                 $error[] = "sorry email id already taken !";
             } else {
-                if ($user->register($fname, $lname, $uname, $umail, $upass)) {
+                if ($user->register($fname, $lname, $uname, $umail, $upass, $urole)) {
                     $user->redirect('sign-up.php?joined');
                 }
             }
@@ -46,10 +47,9 @@ if (isset($_POST['btn-signup'])) {
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Sign up : cleartuts</title>
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="style.css" type="text/css" />
+    <?php
+        include_once 'header.php';
+    ?>
 </head>
 
 <body>
@@ -57,6 +57,7 @@ if (isset($_POST['btn-signup'])) {
         <div class="form-container">
             <form method="post">
                 <h2>Sign up.</h2>
+                <input type="hidden" name="role" value="0">
                 <hr />
                 <?php
                 if (isset($error)) {
