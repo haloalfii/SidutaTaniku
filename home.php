@@ -72,7 +72,7 @@ include_once 'koneksi.php';
                                     label: 'Data Pertanian Sleman',
 
                                     data: [
-                                        
+                                        4, 7, 9, 8
                                     ],
 
                                     backgroundColor: [

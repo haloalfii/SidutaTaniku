@@ -102,7 +102,7 @@ if (!$_SESSION['admin_session']) {
                                     <td><input class="form-control py-2" id="jan" type="number" name="jan" value="0" step="any"></td>
                                 </tr>
                                 <tr>
-                                    <td>Februaru</td>
+                                    <td>Februari</td>
                                     <td> : </td>
                                     <td><input class="form-control py-2" id="feb" type="number" name="feb" value="0" step="any"></td>
                                 </tr>

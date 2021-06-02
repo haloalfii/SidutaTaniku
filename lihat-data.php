@@ -57,7 +57,6 @@ if (!$user->is_loggedin()) {
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
     <script src="dist/assets/demo/datatables-demo.js"></script>
-
 </head>
 
 <body class="sb-nav-fixed">
@@ -71,11 +70,10 @@ if (!$user->is_loggedin()) {
         <div id="layoutSidenav_content">
             <div class="container-fluid">
                 <main>
-
                     <div class="row">
                         <div class="col-md-2">
                             <form method="POST" action="">
-                                <label for="Komoditi">Pilih Komoditi</label>
+                                <label for="Komoditi">Pilih Komoditas</label>
                                 <select id="jenis" name="jenis" class="form-control py-2" required>
                                     <option value="">Pilih</option>
                                     <option value="Jagung">Jagung</option>
@@ -121,11 +119,31 @@ if (!$user->is_loggedin()) {
                             $row = $pertanian->GetAllLuasTanamKecamatan($jenis, $kecamatan);
                             $row1 = $pertanian->GetAllLuasPanenKecamatan($jenis, $kecamatan);
                             $row2 = $pertanian->GetAllProduksiKecamatan($jenis, $kecamatan);
+                            $total = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_tanam 
+                                                        INNER JOIN kecamatan ON luas_tanam.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_tanam.id_komoditi 
+                                                        WHERE komoditi.jenis = '$_POST[jenis]' AND kecamatan.nama_kecamatan = '$_POST[kecamatan]'");
+                            $total1 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_panen 
+                                                        INNER JOIN kecamatan ON luas_panen.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_panen.id_komoditi 
+                                                        WHERE komoditi.jenis = '$_POST[jenis]' AND kecamatan.nama_kecamatan = '$_POST[kecamatan]'");
+                            $total2 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM produksi 
+                                                        INNER JOIN kecamatan ON produksi.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = produksi.id_komoditi 
+                                                        WHERE komoditi.jenis = '$_POST[jenis]' AND kecamatan.nama_kecamatan = '$_POST[kecamatan]'");
+                            
                         } else if ($_POST['jenis']) {
                             $jenis = $_POST['jenis'];
                             $row = $pertanian->GetAllLuasTanam($jenis);
                             $row1 = $pertanian->GetAllLuasPanen($jenis);
                             $row2 = $pertanian->GetAllProduksi($jenis);
+                            $total = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_tanam 
+                                                        INNER JOIN kecamatan ON luas_tanam.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_tanam.id_komoditi 
+                                                        WHERE komoditi.jenis = '$_POST[jenis]'");
+                            $total1 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_panen 
+                                                        INNER JOIN kecamatan ON luas_panen.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_panen.id_komoditi 
+                                                        WHERE komoditi.jenis = '$_POST[jenis]'");
+                            $total2 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM produksi 
+                                                        INNER JOIN kecamatan ON produksi.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = produksi.id_komoditi 
+                                                        WHERE komoditi.jenis = '$_POST[jenis]'");
+                           
                         }
                     } else {
                         $jenis = '';
@@ -133,6 +151,7 @@ if (!$user->is_loggedin()) {
                         $row = $pertanian->GetAll();
                         $row1 = $pertanian->GetAll();
                         $row2 = $pertanian->GetAll();
+                        $total = $pertanian->GetAll();
                         echo '<script>
                             document.getElementById("none").className = "d-none";
                             <script>';
@@ -227,58 +246,25 @@ if (!$user->is_loggedin()) {
                                 ?>
                                 <tr>
                                     <td>Total</td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(feb) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mar) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(apr) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mei) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jun) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jul) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(agu) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(sep) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(okt) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(nov) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(des) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mei), sum(jun), sum(jul), sum(agu) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(sep), sum(okt), sum(nov), sum(des) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_tanam");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3] + $rowjml[4] + $rowjml[5] + $rowjml[6] + $rowjml[7] + $rowjml[8] + $rowjml[9] + $rowjml[10] + $rowjml[11]);?></td>
+                                    <td><?php $rowTotal = mysqli_fetch_array($total); echo round($rowTotal[0]);?></td>
+                                    <td><?php echo round($rowTotal[1] ,1)?></td>
+                                    <td><?php echo round($rowTotal[2] ,1)?></td>
+                                    <td><?php echo round($rowTotal[3] ,1)?></td>
+                                    <td><?php echo round($rowTotal[4] ,1)?></td>
+                                    <td><?php echo round($rowTotal[5] ,1)?></td>
+                                    <td><?php echo round($rowTotal[6] ,1)?></td>
+                                    <td><?php echo round($rowTotal[7] ,1)?></td>
+                                    <td><?php echo round($rowTotal[8] ,1)?></td>
+                                    <td><?php echo round($rowTotal[9] ,1)?></td>
+                                    <td><?php echo round($rowTotal[10], 1)?></td>
+                                    <td><?php echo round($rowTotal[11], 1)?></td>
+                                    <td><?php $totalJanApr = $rowTotal[0] + $rowTotal[1] + $rowTotal[2] + $rowTotal[3]; echo round($totalJanApr, 1);?></td>
+                                    <td><?php $totalMeiAgu = $rowTotal[4] + $rowTotal[5] + $rowTotal[6] + $rowTotal[7]; echo round($totalMeiAgu, 1);?></td>
+                                    <td><?php $totalSepDes = $rowTotal[8] + $rowTotal[9] + $rowTotal[10] + $rowTotal[11]; echo round($totalSepDes, 1);?></td>
+                                    <td><?php $totalAll = $rowTotal[0] + $rowTotal[1] + $rowTotal[2] + $rowTotal[3] + $rowTotal[4] + $rowTotal[5] + $rowTotal[6] + $rowTotal[7] + $rowTotal[8] + $rowTotal[9] + $rowTotal[10] + $rowTotal[11]; echo round($totalAll, 1);?></td>
                                 </tr>
                             </tbody>
                         </table>
-
                         <h3>Luas Panen Menurut Kecamatan (Hektar)</h3>
                         <table class="table table-bordered" width="100%" cellspacing="0">
                             <thead>
@@ -363,54 +349,22 @@ if (!$user->is_loggedin()) {
                                 ?>
                                 <tr>
                                     <td>Total</td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(feb) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mar) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(apr) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mei) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jun) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jul) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(agu) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(sep) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(okt) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(nov) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(des) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mei), sum(jun), sum(jul), sum(agu) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(sep), sum(okt), sum(nov), sum(des) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_panen");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3] + $rowjml[4] + $rowjml[5] + $rowjml[6] + $rowjml[7] + $rowjml[8] + $rowjml[9] + $rowjml[10] + $rowjml[11]);?></td>
+                                    <td><?php $rowTotal1 = mysqli_fetch_array($total1); echo round($rowTotal1[0]);?></td>
+                                    <td><?php echo round($rowTotal1[1] ,1)?></td>
+                                    <td><?php echo round($rowTotal1[2] ,1)?></td>
+                                    <td><?php echo round($rowTotal1[3] ,1)?></td>
+                                    <td><?php echo round($rowTotal1[4] ,1)?></td>
+                                    <td><?php echo round($rowTotal1[5] ,1)?></td>
+                                    <td><?php echo round($rowTotal1[6] ,1)?></td>
+                                    <td><?php echo round($rowTotal1[7] ,1)?></td>
+                                    <td><?php echo round($rowTotal1[8] ,1)?></td>
+                                    <td><?php echo round($rowTotal1[9] ,1)?></td>
+                                    <td><?php echo round($rowTotal1[10], 1)?></td>
+                                    <td><?php echo round($rowTotal1[11], 1)?></td>
+                                    <td><?php $totalJanApr = $rowTotal1[0] + $rowTotal1[1] + $rowTotal1[2] + $rowTotal1[3]; echo round($totalJanApr, 1);?></td>
+                                    <td><?php $totalMeiAgu = $rowTotal1[4] + $rowTotal1[5] + $rowTotal1[6] + $rowTotal1[7]; echo round($totalMeiAgu, 1);?></td>
+                                    <td><?php $totalSepDes = $rowTotal1[8] + $rowTotal1[9] + $rowTotal1[10] + $rowTotal1[11]; echo round($totalSepDes, 1);?></td>
+                                    <td><?php $totalAll = $rowTotal1[0] + $rowTotal1[1] + $rowTotal1[2] + $rowTotal1[3] + $rowTotal1[4] + $rowTotal1[5] + $rowTotal1[6] + $rowTotal1[7] + $rowTotal1[8] + $rowTotal1[9] + $rowTotal1[10] + $rowTotal1[11]; echo round($totalAll, 1);?></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -499,54 +453,22 @@ if (!$user->is_loggedin()) {
                                 ?>
                                 <tr>
                                     <td>Total</td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(feb) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mar) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(apr) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mei) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jun) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jul) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(agu) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(sep) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(okt) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(nov) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(des) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(mei), sum(jun), sum(jul), sum(agu) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(sep), sum(okt), sum(nov), sum(des) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3]);?></td>
-                                    <td><?php $jml = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM produksi");
-                                    $rowjml = mysqli_fetch_row($jml);
-                                    echo round($rowjml[0] + $rowjml[1] + $rowjml[2] + $rowjml[3] + $rowjml[4] + $rowjml[5] + $rowjml[6] + $rowjml[7] + $rowjml[8] + $rowjml[9] + $rowjml[10] + $rowjml[11]);?></td>
+                                    <td><?php $rowTotal2 = mysqli_fetch_array($total2); echo round($rowTotal2[0]);?></td>
+                                    <td><?php echo round($rowTotal2[1] ,1)?></td>
+                                    <td><?php echo round($rowTotal2[2] ,1)?></td>
+                                    <td><?php echo round($rowTotal2[3] ,1)?></td>
+                                    <td><?php echo round($rowTotal2[4] ,1)?></td>
+                                    <td><?php echo round($rowTotal2[5] ,1)?></td>
+                                    <td><?php echo round($rowTotal2[6] ,1)?></td>
+                                    <td><?php echo round($rowTotal2[7] ,1)?></td>
+                                    <td><?php echo round($rowTotal2[8] ,1)?></td>
+                                    <td><?php echo round($rowTotal2[9] ,1)?></td>
+                                    <td><?php echo round($rowTotal2[10], 1)?></td>
+                                    <td><?php echo round($rowTotal2[11], 1)?></td>
+                                    <td><?php $totalJanApr = $rowTotal2[0] + $rowTotal2[1] + $rowTotal2[2] + $rowTotal2[3]; echo round($totalJanApr, 1);?></td>
+                                    <td><?php $totalMeiAgu = $rowTotal2[4] + $rowTotal2[5] + $rowTotal2[6] + $rowTotal2[7]; echo round($totalMeiAgu, 1);?></td>
+                                    <td><?php $totalSepDes = $rowTotal2[8] + $rowTotal2[9] + $rowTotal2[10] + $rowTotal2[11]; echo round($totalSepDes, 1);?></td>
+                                    <td><?php $totalAll = $rowTotal2[0] + $rowTotal2[1] + $rowTotal2[2] + $rowTotal2[3] + $rowTotal2[4] + $rowTotal2[5] + $rowTotal2[6] + $rowTotal2[7] + $rowTotal2[8] + $rowTotal2[9] + $rowTotal2[10] + $rowTotal2[11]; echo round($totalAll, 1);?></td>
                                 </tr>
                             </tbody>
                         </table>
