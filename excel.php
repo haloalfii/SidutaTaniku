@@ -15,8 +15,8 @@ $total2 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum
 ?>
 
 <?php
-// header("Content-type: application/vnd-ms-excel");
-// header("Content-Disposition: attachment; filename=Data Pertanian.xls");
+header("Content-type: application/vnd-ms-excel");
+header("Content-Disposition: attachment; filename=Data Pertanian.xls");
 ?>
 
 <!DOCTYPE html>
