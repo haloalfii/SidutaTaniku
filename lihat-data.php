@@ -35,7 +35,7 @@ if (isset($_GET['hapus_produksi'])) {
     }
 }
 
-include_once 'dbconfig.php';
+include_once 'Dbconfig.php';
 if (!$user->is_loggedin()) {
     $user->redirect('index.php');
 }
@@ -128,7 +128,6 @@ if (!$user->is_loggedin()) {
                             $total2 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM produksi 
                                                         INNER JOIN kecamatan ON produksi.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = produksi.id_komoditi 
                                                         WHERE komoditi.jenis = '$_POST[jenis]' AND kecamatan.nama_kecamatan = '$_POST[kecamatan]'");
-                            
                         } else if ($_POST['jenis']) {
                             $jenis = $_POST['jenis'];
                             $row = $pertanian->GetAllLuasTanam($jenis);
@@ -143,7 +142,6 @@ if (!$user->is_loggedin()) {
                             $total2 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM produksi 
                                                         INNER JOIN kecamatan ON produksi.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = produksi.id_komoditi 
                                                         WHERE komoditi.jenis = '$_POST[jenis]'");
-                           
                         }
                     } else {
                         $jenis = '';
@@ -159,8 +157,20 @@ if (!$user->is_loggedin()) {
                     ?>
 
                     <div id="none" class="">
-                        <br>
-                        <a target="_blank" href="excel.php" class="btn btn-info">EXPORT KE EXCEL</a>
+                        <form target="blank" action="excel.php" method="POST">
+                            <?php
+                            if (isset($_POST["cari"])) {
+                                if ($_POST['jenis'] && $_POST['kecamatan']) {
+                                    echo "<input type='hidden' name='jenisexl' value='$jenis'>";
+                                    echo "<input type='hidden' name='kecamatanexl' value='$kecamatan'>";
+                                } else if ($_POST['jenis']) {
+                                    echo "<input type='hidden' name='jenisexl' value='$jenis'>";
+                                    echo "<input type='hidden' name='kecamatanexl' value=''>";
+                                }
+                            } 
+                            ?>
+                            <button type="submit" name="excel" value="excel" class="btn btn-info" style="margin-top: 10px;">EXPORT</button>
+                        </form>
                         <br>
                         <h3>Luas Tanam Menurut Kecamatan (Hektar)</h3>
                         <table class="table table-bordered" width="100%" cellspacing="0">
@@ -246,22 +256,27 @@ if (!$user->is_loggedin()) {
                                 ?>
                                 <tr>
                                     <td>Total</td>
-                                    <td><?php $rowTotal = mysqli_fetch_array($total); echo round($rowTotal[0]);?></td>
-                                    <td><?php echo round($rowTotal[1] ,1)?></td>
-                                    <td><?php echo round($rowTotal[2] ,1)?></td>
-                                    <td><?php echo round($rowTotal[3] ,1)?></td>
-                                    <td><?php echo round($rowTotal[4] ,1)?></td>
-                                    <td><?php echo round($rowTotal[5] ,1)?></td>
-                                    <td><?php echo round($rowTotal[6] ,1)?></td>
-                                    <td><?php echo round($rowTotal[7] ,1)?></td>
-                                    <td><?php echo round($rowTotal[8] ,1)?></td>
-                                    <td><?php echo round($rowTotal[9] ,1)?></td>
-                                    <td><?php echo round($rowTotal[10], 1)?></td>
-                                    <td><?php echo round($rowTotal[11], 1)?></td>
-                                    <td><?php $totalJanApr = $rowTotal[0] + $rowTotal[1] + $rowTotal[2] + $rowTotal[3]; echo round($totalJanApr, 1);?></td>
-                                    <td><?php $totalMeiAgu = $rowTotal[4] + $rowTotal[5] + $rowTotal[6] + $rowTotal[7]; echo round($totalMeiAgu, 1);?></td>
-                                    <td><?php $totalSepDes = $rowTotal[8] + $rowTotal[9] + $rowTotal[10] + $rowTotal[11]; echo round($totalSepDes, 1);?></td>
-                                    <td><?php $totalAll = $rowTotal[0] + $rowTotal[1] + $rowTotal[2] + $rowTotal[3] + $rowTotal[4] + $rowTotal[5] + $rowTotal[6] + $rowTotal[7] + $rowTotal[8] + $rowTotal[9] + $rowTotal[10] + $rowTotal[11]; echo round($totalAll, 1);?></td>
+                                    <td><?php $rowTotal = mysqli_fetch_array($total);
+                                        echo round($rowTotal[0]); ?></td>
+                                    <td><?php echo round($rowTotal[1], 1) ?></td>
+                                    <td><?php echo round($rowTotal[2], 1) ?></td>
+                                    <td><?php echo round($rowTotal[3], 1) ?></td>
+                                    <td><?php echo round($rowTotal[4], 1) ?></td>
+                                    <td><?php echo round($rowTotal[5], 1) ?></td>
+                                    <td><?php echo round($rowTotal[6], 1) ?></td>
+                                    <td><?php echo round($rowTotal[7], 1) ?></td>
+                                    <td><?php echo round($rowTotal[8], 1) ?></td>
+                                    <td><?php echo round($rowTotal[9], 1) ?></td>
+                                    <td><?php echo round($rowTotal[10], 1) ?></td>
+                                    <td><?php echo round($rowTotal[11], 1) ?></td>
+                                    <td><?php $totalJanApr = $rowTotal[0] + $rowTotal[1] + $rowTotal[2] + $rowTotal[3];
+                                        echo round($totalJanApr, 1); ?></td>
+                                    <td><?php $totalMeiAgu = $rowTotal[4] + $rowTotal[5] + $rowTotal[6] + $rowTotal[7];
+                                        echo round($totalMeiAgu, 1); ?></td>
+                                    <td><?php $totalSepDes = $rowTotal[8] + $rowTotal[9] + $rowTotal[10] + $rowTotal[11];
+                                        echo round($totalSepDes, 1); ?></td>
+                                    <td><?php $totalAll = $rowTotal[0] + $rowTotal[1] + $rowTotal[2] + $rowTotal[3] + $rowTotal[4] + $rowTotal[5] + $rowTotal[6] + $rowTotal[7] + $rowTotal[8] + $rowTotal[9] + $rowTotal[10] + $rowTotal[11];
+                                        echo round($totalAll, 1); ?></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -349,22 +364,27 @@ if (!$user->is_loggedin()) {
                                 ?>
                                 <tr>
                                     <td>Total</td>
-                                    <td><?php $rowTotal1 = mysqli_fetch_array($total1); echo round($rowTotal1[0]);?></td>
-                                    <td><?php echo round($rowTotal1[1] ,1)?></td>
-                                    <td><?php echo round($rowTotal1[2] ,1)?></td>
-                                    <td><?php echo round($rowTotal1[3] ,1)?></td>
-                                    <td><?php echo round($rowTotal1[4] ,1)?></td>
-                                    <td><?php echo round($rowTotal1[5] ,1)?></td>
-                                    <td><?php echo round($rowTotal1[6] ,1)?></td>
-                                    <td><?php echo round($rowTotal1[7] ,1)?></td>
-                                    <td><?php echo round($rowTotal1[8] ,1)?></td>
-                                    <td><?php echo round($rowTotal1[9] ,1)?></td>
-                                    <td><?php echo round($rowTotal1[10], 1)?></td>
-                                    <td><?php echo round($rowTotal1[11], 1)?></td>
-                                    <td><?php $totalJanApr = $rowTotal1[0] + $rowTotal1[1] + $rowTotal1[2] + $rowTotal1[3]; echo round($totalJanApr, 1);?></td>
-                                    <td><?php $totalMeiAgu = $rowTotal1[4] + $rowTotal1[5] + $rowTotal1[6] + $rowTotal1[7]; echo round($totalMeiAgu, 1);?></td>
-                                    <td><?php $totalSepDes = $rowTotal1[8] + $rowTotal1[9] + $rowTotal1[10] + $rowTotal1[11]; echo round($totalSepDes, 1);?></td>
-                                    <td><?php $totalAll = $rowTotal1[0] + $rowTotal1[1] + $rowTotal1[2] + $rowTotal1[3] + $rowTotal1[4] + $rowTotal1[5] + $rowTotal1[6] + $rowTotal1[7] + $rowTotal1[8] + $rowTotal1[9] + $rowTotal1[10] + $rowTotal1[11]; echo round($totalAll, 1);?></td>
+                                    <td><?php $rowTotal1 = mysqli_fetch_array($total1);
+                                        echo round($rowTotal1[0]); ?></td>
+                                    <td><?php echo round($rowTotal1[1], 1) ?></td>
+                                    <td><?php echo round($rowTotal1[2], 1) ?></td>
+                                    <td><?php echo round($rowTotal1[3], 1) ?></td>
+                                    <td><?php echo round($rowTotal1[4], 1) ?></td>
+                                    <td><?php echo round($rowTotal1[5], 1) ?></td>
+                                    <td><?php echo round($rowTotal1[6], 1) ?></td>
+                                    <td><?php echo round($rowTotal1[7], 1) ?></td>
+                                    <td><?php echo round($rowTotal1[8], 1) ?></td>
+                                    <td><?php echo round($rowTotal1[9], 1) ?></td>
+                                    <td><?php echo round($rowTotal1[10], 1) ?></td>
+                                    <td><?php echo round($rowTotal1[11], 1) ?></td>
+                                    <td><?php $totalJanApr = $rowTotal1[0] + $rowTotal1[1] + $rowTotal1[2] + $rowTotal1[3];
+                                        echo round($totalJanApr, 1); ?></td>
+                                    <td><?php $totalMeiAgu = $rowTotal1[4] + $rowTotal1[5] + $rowTotal1[6] + $rowTotal1[7];
+                                        echo round($totalMeiAgu, 1); ?></td>
+                                    <td><?php $totalSepDes = $rowTotal1[8] + $rowTotal1[9] + $rowTotal1[10] + $rowTotal1[11];
+                                        echo round($totalSepDes, 1); ?></td>
+                                    <td><?php $totalAll = $rowTotal1[0] + $rowTotal1[1] + $rowTotal1[2] + $rowTotal1[3] + $rowTotal1[4] + $rowTotal1[5] + $rowTotal1[6] + $rowTotal1[7] + $rowTotal1[8] + $rowTotal1[9] + $rowTotal1[10] + $rowTotal1[11];
+                                        echo round($totalAll, 1); ?></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -453,22 +473,27 @@ if (!$user->is_loggedin()) {
                                 ?>
                                 <tr>
                                     <td>Total</td>
-                                    <td><?php $rowTotal2 = mysqli_fetch_array($total2); echo round($rowTotal2[0]);?></td>
-                                    <td><?php echo round($rowTotal2[1] ,1)?></td>
-                                    <td><?php echo round($rowTotal2[2] ,1)?></td>
-                                    <td><?php echo round($rowTotal2[3] ,1)?></td>
-                                    <td><?php echo round($rowTotal2[4] ,1)?></td>
-                                    <td><?php echo round($rowTotal2[5] ,1)?></td>
-                                    <td><?php echo round($rowTotal2[6] ,1)?></td>
-                                    <td><?php echo round($rowTotal2[7] ,1)?></td>
-                                    <td><?php echo round($rowTotal2[8] ,1)?></td>
-                                    <td><?php echo round($rowTotal2[9] ,1)?></td>
-                                    <td><?php echo round($rowTotal2[10], 1)?></td>
-                                    <td><?php echo round($rowTotal2[11], 1)?></td>
-                                    <td><?php $totalJanApr = $rowTotal2[0] + $rowTotal2[1] + $rowTotal2[2] + $rowTotal2[3]; echo round($totalJanApr, 1);?></td>
-                                    <td><?php $totalMeiAgu = $rowTotal2[4] + $rowTotal2[5] + $rowTotal2[6] + $rowTotal2[7]; echo round($totalMeiAgu, 1);?></td>
-                                    <td><?php $totalSepDes = $rowTotal2[8] + $rowTotal2[9] + $rowTotal2[10] + $rowTotal2[11]; echo round($totalSepDes, 1);?></td>
-                                    <td><?php $totalAll = $rowTotal2[0] + $rowTotal2[1] + $rowTotal2[2] + $rowTotal2[3] + $rowTotal2[4] + $rowTotal2[5] + $rowTotal2[6] + $rowTotal2[7] + $rowTotal2[8] + $rowTotal2[9] + $rowTotal2[10] + $rowTotal2[11]; echo round($totalAll, 1);?></td>
+                                    <td><?php $rowTotal2 = mysqli_fetch_array($total2);
+                                        echo round($rowTotal2[0]); ?></td>
+                                    <td><?php echo round($rowTotal2[1], 1) ?></td>
+                                    <td><?php echo round($rowTotal2[2], 1) ?></td>
+                                    <td><?php echo round($rowTotal2[3], 1) ?></td>
+                                    <td><?php echo round($rowTotal2[4], 1) ?></td>
+                                    <td><?php echo round($rowTotal2[5], 1) ?></td>
+                                    <td><?php echo round($rowTotal2[6], 1) ?></td>
+                                    <td><?php echo round($rowTotal2[7], 1) ?></td>
+                                    <td><?php echo round($rowTotal2[8], 1) ?></td>
+                                    <td><?php echo round($rowTotal2[9], 1) ?></td>
+                                    <td><?php echo round($rowTotal2[10], 1) ?></td>
+                                    <td><?php echo round($rowTotal2[11], 1) ?></td>
+                                    <td><?php $totalJanApr = $rowTotal2[0] + $rowTotal2[1] + $rowTotal2[2] + $rowTotal2[3];
+                                        echo round($totalJanApr, 1); ?></td>
+                                    <td><?php $totalMeiAgu = $rowTotal2[4] + $rowTotal2[5] + $rowTotal2[6] + $rowTotal2[7];
+                                        echo round($totalMeiAgu, 1); ?></td>
+                                    <td><?php $totalSepDes = $rowTotal2[8] + $rowTotal2[9] + $rowTotal2[10] + $rowTotal2[11];
+                                        echo round($totalSepDes, 1); ?></td>
+                                    <td><?php $totalAll = $rowTotal2[0] + $rowTotal2[1] + $rowTotal2[2] + $rowTotal2[3] + $rowTotal2[4] + $rowTotal2[5] + $rowTotal2[6] + $rowTotal2[7] + $rowTotal2[8] + $rowTotal2[9] + $rowTotal2[10] + $rowTotal2[11];
+                                        echo round($totalAll, 1); ?></td>
                                 </tr>
                             </tbody>
                         </table>

@@ -20,27 +20,60 @@
             return $result;
         }
 
-        public function GetAllLuasTanamExcel(){
+        public function GetAllLuasTanamExcel($jenisexl){
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $query = "SELECT * FROM luas_tanam INNER JOIN kecamatan ON luas_tanam.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_tanam.id_komoditi";
+            $query = "SELECT * FROM luas_tanam INNER JOIN kecamatan ON luas_tanam.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_tanam.id_komoditi
+            WHERE komoditi.jenis = '".$jenisexl."'";
             $stmt = $this->pdo->prepare($query);
             $stmt->execute();
             $result = $stmt->fetchAll();
             return $result;
         }
 
-        public function GetAllLuasPanenExcel(){
+        public function GetAllLuasPanenExcel($jenisexl){
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $query = "SELECT * FROM luas_panen INNER JOIN kecamatan ON luas_panen.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_panen.id_komoditi";
+            $query = "SELECT * FROM luas_panen INNER JOIN kecamatan ON luas_panen.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_panen.id_komoditi
+            WHERE komoditi.jenis = '".$jenisexl."'";
             $stmt = $this->pdo->prepare($query);
             $stmt->execute();
             $result = $stmt->fetchAll();
             return $result;
         }
 
-        public function GetAllProduksiExcel(){
+        public function GetAllProduksiExcel($jenisexl){
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $query = "SELECT * FROM produksi INNER JOIN kecamatan ON produksi.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = produksi.id_komoditi";
+            $query = "SELECT * FROM produksi INNER JOIN kecamatan ON produksi.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = produksi.id_komoditi
+            WHERE komoditi.jenis = '".$jenisexl."'";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            return $result;
+        }
+
+        public function GetAllLuasTanamKecamatanExcel($jenisexl, $kecamatanexl){
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $query = "SELECT * FROM luas_tanam INNER JOIN kecamatan ON luas_tanam.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_tanam.id_komoditi
+            WHERE komoditi.jenis = '".$jenisexl."' AND kecamatan.nama_kecamatan = '".$kecamatanexl."'";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            return $result;
+        }
+
+        public function GetAllLuasPanenKecamatanExcel($jenisexl, $kecamatanexl){
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $query = "SELECT * FROM luas_panen INNER JOIN kecamatan ON luas_panen.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_panen.id_komoditi
+            WHERE komoditi.jenis = '".$jenisexl."' AND kecamatan.nama_kecamatan = '".$kecamatanexl."'";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            return $result;
+        }
+
+        public function GetAllProduksiKecamatanExcel($jenisexl, $kecamatanexl){
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $query = "SELECT * FROM produksi INNER JOIN kecamatan ON produksi.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = produksi.id_komoditi
+            WHERE komoditi.jenis = '".$jenisexl."' AND kecamatan.nama_kecamatan = '".$kecamatanexl."'";
             $stmt = $this->pdo->prepare($query);
             $stmt->execute();
             $result = $stmt->fetchAll();

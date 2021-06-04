@@ -2,21 +2,47 @@
 include_once "proses.php";
 include_once "koneksi.php";
 $pertanian = new Pertanian;
-$row = $pertanian->GetAllLuasTanamExcel();
-$row1 = $pertanian->GetAllLuasPanenExcel();
-$row2 = $pertanian->GetAllProduksiExcel();
 
-$total = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_tanam 
-                                                        INNER JOIN kecamatan ON luas_tanam.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_tanam.id_komoditi");
-$total1 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_panen 
-                                                        INNER JOIN kecamatan ON luas_panen.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_panen.id_komoditi");
-$total2 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM produksi 
-                                                        INNER JOIN kecamatan ON produksi.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = produksi.id_komoditi");
+if (isset($_POST['excel'])) {
+    if ($_POST['jenisexl'] && $_POST['kecamatanexl']) {
+        $jenisexl = $_POST['jenisexl'];
+        $kecamatanexl = $_POST['kecamatanexl'];
+        $row = $pertanian->GetAllLuasTanamKecamatanExcel($jenisexl, $kecamatanexl);
+        $row1 = $pertanian->GetAllLuasPanenKecamatanExcel($jenisexl, $kecamatanexl);
+        $row2 = $pertanian->GetAllProduksiKecamatanExcel($jenisexl, $kecamatanexl);
+
+        $total = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_tanam 
+                                                        INNER JOIN kecamatan ON luas_tanam.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_tanam.id_komoditi 
+                                                        WHERE komoditi.jenis = '$_POST[jenisexl]' AND kecamatan.nama_kecamatan = '$_POST[kecamatanexl]'");
+                            $total1 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_panen 
+                                                        INNER JOIN kecamatan ON luas_panen.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_panen.id_komoditi 
+                                                        WHERE komoditi.jenis = '$_POST[jenisexl]' AND kecamatan.nama_kecamatan = '$_POST[kecamatanexl]'");
+                            $total2 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM produksi 
+                                                        INNER JOIN kecamatan ON produksi.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = produksi.id_komoditi 
+                                                        WHERE komoditi.jenis = '$_POST[jenisexl]' AND kecamatan.nama_kecamatan = '$_POST[kecamatanexl]'");
+    } else if ($_POST['jenisexl']) {
+        $jenisexl = $_POST['jenisexl'];
+        $row = $pertanian->GetAllLuasTanamExcel($jenisexl);
+        $row1 = $pertanian->GetAllLuasPanenExcel($jenisexl);
+        $row2 = $pertanian->GetAllProduksiExcel($jenisexl);
+
+        $total = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_tanam 
+                                                        INNER JOIN kecamatan ON luas_tanam.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_tanam.id_komoditi 
+                                                        WHERE komoditi.jenis = '$_POST[jenisexl]'");
+                            $total1 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_panen 
+                                                        INNER JOIN kecamatan ON luas_panen.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_panen.id_komoditi 
+                                                        WHERE komoditi.jenis = '$_POST[jenisexl]'");
+                            $total2 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM produksi 
+                                                        INNER JOIN kecamatan ON produksi.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = produksi.id_komoditi 
+                                                        WHERE komoditi.jenis = '$_POST[jenisexl]'");
+    }
+}
 ?>
+
 
 <?php
 header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=Data Pertanian.xls");
+header("Content-Disposition: attachment; filename=Data $jenisexl $kecamatanexl .xls");
 ?>
 
 <!DOCTYPE html>
@@ -52,6 +78,7 @@ header("Content-Disposition: attachment; filename=Data Pertanian.xls");
             border-radius: 2px;
         }
     </style>
+
     <center>
         <h3>Data Luas Tanam</h3>
     </center>
@@ -300,6 +327,7 @@ header("Content-Disposition: attachment; filename=Data Pertanian.xls");
             <td><?php $totalAll = $rowTotal2[0] + $rowTotal2[1] + $rowTotal2[2] + $rowTotal2[3] + $rowTotal2[4] + $rowTotal2[5] + $rowTotal2[6] + $rowTotal2[7] + $rowTotal2[8] + $rowTotal2[9] + $rowTotal2[10] + $rowTotal2[11];
                 echo round($totalAll, 1); ?></td>
         </tr>
+    </table>
 </body>
 
 </html>
