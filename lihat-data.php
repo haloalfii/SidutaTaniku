@@ -172,7 +172,7 @@ if (!$user->is_loggedin()) {
                             <button type="submit" name="excel" value="excel" class="btn btn-info" style="margin-top: 10px;">EXPORT</button>
                         </form>
                         <br>
-                        <h3>Luas Tanam Menurut Kecamatan (Hektar)</h3>
+                        <h3>Luas Tanam Menurut Kecamatan*** (Hektar)</h3>
                         <table class="table table-bordered" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
@@ -192,7 +192,7 @@ if (!$user->is_loggedin()) {
                                     <th>Jan-Apr</th>
                                     <th>Mei-Ags</th>
                                     <th>Sep-Des</th>
-                                    <th>Jumlah</th>
+                                    <th>Jan-Des</th>
                                     <th>Komoditas</th>
                                     <?php if (isset($_SESSION['user_session'])) : ?>
                                         <th class="d-none">Action</th>
@@ -280,7 +280,7 @@ if (!$user->is_loggedin()) {
                                 </tr>
                             </tbody>
                         </table>
-                        <h3>Luas Panen Menurut Kecamatan (Hektar)</h3>
+                        <h3>Luas Panen Menurut Kecamatan*** (Hektar)</h3>
                         <table class="table table-bordered" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
@@ -300,7 +300,7 @@ if (!$user->is_loggedin()) {
                                     <th>Jan-Apr</th>
                                     <th>Mei-Ags</th>
                                     <th>Sep-Des</th>
-                                    <th>Jumlah</th>
+                                    <th>Jan-Des</th>
                                     <th>Komoditas</th>
                                     <?php if (isset($_SESSION['user_session'])) : ?>
                                         <th class="d-none">Action</th>
@@ -389,7 +389,7 @@ if (!$user->is_loggedin()) {
                             </tbody>
                         </table>
 
-                        <h3>Produksi (Ton)</h3>
+                        <h3>Produksi*** (Ton)</h3>
                         <table class="table table-bordered" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
@@ -409,7 +409,7 @@ if (!$user->is_loggedin()) {
                                     <th>Jan-Apr</th>
                                     <th>Mei-Ags</th>
                                     <th>Sep-Des</th>
-                                    <th>Jumlah</th>
+                                    <th>Jan-Des</th>
                                     <th>Komoditas</th>
                                     <?php if (isset($_SESSION['user_session'])) : ?>
                                         <th class="d-none">Action</th>
@@ -497,6 +497,7 @@ if (!$user->is_loggedin()) {
                                 </tr>
                             </tbody>
                         </table>
+                        <p><b>Note : ***, Data yang ditampilkan bersifat sangat sementara</b></p>
                     </div>
                 </main>
             </div>

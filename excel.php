@@ -14,10 +14,10 @@ if (isset($_POST['excel'])) {
         $total = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_tanam 
                                                         INNER JOIN kecamatan ON luas_tanam.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_tanam.id_komoditi 
                                                         WHERE komoditi.jenis = '$_POST[jenisexl]' AND kecamatan.nama_kecamatan = '$_POST[kecamatanexl]'");
-                            $total1 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_panen 
+        $total1 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_panen 
                                                         INNER JOIN kecamatan ON luas_panen.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_panen.id_komoditi 
                                                         WHERE komoditi.jenis = '$_POST[jenisexl]' AND kecamatan.nama_kecamatan = '$_POST[kecamatanexl]'");
-                            $total2 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM produksi 
+        $total2 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM produksi 
                                                         INNER JOIN kecamatan ON produksi.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = produksi.id_komoditi 
                                                         WHERE komoditi.jenis = '$_POST[jenisexl]' AND kecamatan.nama_kecamatan = '$_POST[kecamatanexl]'");
     } else if ($_POST['jenisexl']) {
@@ -29,10 +29,10 @@ if (isset($_POST['excel'])) {
         $total = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_tanam 
                                                         INNER JOIN kecamatan ON luas_tanam.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_tanam.id_komoditi 
                                                         WHERE komoditi.jenis = '$_POST[jenisexl]'");
-                            $total1 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_panen 
+        $total1 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM luas_panen 
                                                         INNER JOIN kecamatan ON luas_panen.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = luas_panen.id_komoditi 
                                                         WHERE komoditi.jenis = '$_POST[jenisexl]'");
-                            $total2 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM produksi 
+        $total2 = mysqli_query($con, "SELECT sum(jan), sum(feb), sum(mar), sum(apr), sum(mei), sum(jun), sum(jul), sum(agu), sum(sep), sum(okt), sum(nov), sum(des) FROM produksi 
                                                         INNER JOIN kecamatan ON produksi.id_kecamatan = kecamatan.id_kecamatan JOIN komoditi ON komoditi.id_komoditi = produksi.id_komoditi 
                                                         WHERE komoditi.jenis = '$_POST[jenisexl]'");
     }
@@ -80,7 +80,7 @@ header("Content-Disposition: attachment; filename=Data $jenisexl $kecamatanexl .
     </style>
 
     <center>
-        <h3>Data Luas Tanam</h3>
+        <h3>Data Luas Tanam***</h3>
     </center>
 
     <table border="1">
@@ -101,6 +101,7 @@ header("Content-Disposition: attachment; filename=Data $jenisexl $kecamatanexl .
             <th>Jan-Apr</th>
             <th>Mei-Ags</th>
             <th>Sep-Des</th>
+            <th>Jan-Des</th>
             <th>Komoditi</th>
         </tr>
         <?php
@@ -131,6 +132,10 @@ header("Content-Disposition: attachment; filename=Data $jenisexl $kecamatanexl .
                 <td><?php
                     $sepdes = $row["sep"] + $row["okt"] + $row["nov"] + $row["des"];
                     echo $sepdes;
+                    ?></td>
+                <td><?php
+                    $all = $row["jan"] + $row["feb"] + $row["mar"] + $row["apr"] + $row["mei"] + $row["jun"] + $row["jul"] + $row["agu"] + $row["sep"] + $row["okt"] + $row["nov"] + $row["des"];
+                    echo $all;
                     ?></td>
                 <td><?php echo $row["jenis"] ?></td>
             </tr>
@@ -163,7 +168,7 @@ header("Content-Disposition: attachment; filename=Data $jenisexl $kecamatanexl .
         </tr>
     </table>
     <center>
-        <h3>Data Luas Panen</h3>
+        <h3>Data Luas Panen***</h3>
     </center>
     <table border="1">
         <tr>
@@ -183,6 +188,7 @@ header("Content-Disposition: attachment; filename=Data $jenisexl $kecamatanexl .
             <th>Jan-Apr</th>
             <th>Mei-Ags</th>
             <th>Sep-Des</th>
+            <th>Jan-Des</th>
             <th>Komoditi</th>
         </tr>
 
@@ -215,6 +221,10 @@ header("Content-Disposition: attachment; filename=Data $jenisexl $kecamatanexl .
                     $sepdes = $row1["sep"] + $row1["okt"] + $row1["nov"] + $row1["des"];
                     echo $sepdes;
                     ?></td>
+                <td><?php
+                    $all = $row1["jan"] + $row1["feb"] + $row1["mar"] + $row1["apr"] + $row1["mei"] + $row1["jun"] + $row1["jul"] + $row1["agu"] + $row1["sep"] + $row1["okt"] + $row1["nov"] + $row1["des"];
+                    echo $all;
+                    ?></td>
                 <td><?php echo $row1["jenis"] ?></td>
             </tr>
         <?php
@@ -246,7 +256,7 @@ header("Content-Disposition: attachment; filename=Data $jenisexl $kecamatanexl .
         </tr>
     </table>
     <center>
-        <h3>Data Produksi</h3>
+        <h3>Data Produksi***</h3>
     </center>
     <table border="1">
         <tr>
@@ -266,6 +276,7 @@ header("Content-Disposition: attachment; filename=Data $jenisexl $kecamatanexl .
             <th>Jan-Apr</th>
             <th>Mei-Ags</th>
             <th>Sep-Des</th>
+            <th>Jan-Des</th>
             <th>Komoditi</th>
         </tr>
 
@@ -298,6 +309,10 @@ header("Content-Disposition: attachment; filename=Data $jenisexl $kecamatanexl .
                     $sepdes = $row2["sep"] + $row2["okt"] + $row2["nov"] + $row2["des"];
                     echo $sepdes;
                     ?></td>
+                <td><?php
+                    $all = $row2["jan"] + $row2["feb"] + $row2["mar"] + $row2["apr"] + $row2["mei"] + $row2["jun"] + $row2["jul"] + $row2["agu"] + $row2["sep"] + $row2["okt"] + $row2["nov"] + $row2["des"];
+                    echo $all;
+                    ?></td>
                 <td><?php echo $row2["jenis"] ?></td>
             </tr>
         <?php
@@ -328,6 +343,7 @@ header("Content-Disposition: attachment; filename=Data $jenisexl $kecamatanexl .
                 echo round($totalAll, 1); ?></td>
         </tr>
     </table>
+    <p><b>Note : ***, Data yang ditampilkan bersifat sangat sementara</b></p>
 </body>
 
 </html>
