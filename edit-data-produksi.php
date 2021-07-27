@@ -1,5 +1,6 @@
 <?php 
 include('proses.php');
+include_once 'koneksi.php';
 
 $proses = new Pertanian();
 
@@ -8,6 +9,12 @@ if(isset($_GET['id_produksi']))
     $id_produksi = $_GET['id_produksi'];
     $data = $proses->GetProduksi($id_produksi);
 }
+
+$DataKec = mysqli_query($con, "SELECT kecamatan.id_kecamatan FROM kecamatan INNER JOIN produksi ON kecamatan.id_kecamatan = produksi.id_kecamatan WHERE id_produksi = '".$id_produksi."'");
+$rowx = mysqli_fetch_array($DataKec);
+
+$NamaKec = mysqli_query($con, "SELECT nama_kecamatan FROM kecamatan WHERE id_kecamatan = '".$rowx[0]."'");
+$rowy = mysqli_fetch_array($NamaKec);
 
 if(isset($_POST['update']))
 {
@@ -69,12 +76,12 @@ if(!$_SESSION['admin_session'])
                 <main>
                     <form action="" method="POST">
                     <div class="container">
-                    <h4>Edit Data Produksi <i class="text-danger"><?php echo $data['jenis'] ?></i> Di Kecamatan <i class="text-danger"><?= $data['nama_kecamatan'] ?></i></h4>
+                    <h4>Edit Data Produksi <i class="text-danger"><?php echo $data['jenis'] ?></i> Di Kecamatan <i class="text-danger"><?= $rowy[0] ?></i></h4>
                         <table border="0">
                         <input type="hidden" name="id_produksi" value="<?= $data['id_produksi'] ?>">
                             <tr>
                                 <td>
-                                    <input class="form-control py-2" id="id_kecamatan" step="any" type="hidden" name="id_kecamatan" value="<?= $data['id_kecamatan'] ?>">
+                                    <input class="form-control py-2" id="id_kecamatan" step="any" type="hidden" name="id_kecamatan" value="<?= $rowx[0] ?>">
                                 </td>
                             </tr>
                             <tr>

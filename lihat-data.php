@@ -511,6 +511,4 @@ if (!$user->is_loggedin()) {
     include_once 'script-js.php';
     ?>
 </body>
-
-
 </html>
